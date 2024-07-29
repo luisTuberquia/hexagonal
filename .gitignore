@@ -1,0 +1,84 @@
+# Archivos de compilación y carpetas
+bin/
+obj/
+
+# Configuración del entorno
+.env
+
+# Archivos de paquetes
+*.nupkg
+*.snupkg
+
+# Paquetes NuGet descargados
+packages/
+.nuget/
+
+# Archivos de configuración de Visual Studio
+.vscode/
+.vs/
+.vscode/settings.json
+.vscode/tasks.json
+.vscode/launch.json
+.vscode/extensions.json
+*.csproj.user
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Archivos de dependencia de Visual Studio Code
+.vscode/*
+
+# Archivos de configuración de Rider
+.idea/
+
+# Archivos de configuración de Mac
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Archivos generados de código
+Generated\
+
+# Configuraciones locales
+*.localhistory
+*.localsettings.json
+
+# Archivos de depuración y rastreo
+*.log
+*.tlog
+
+# Archivos de publicación y despliegue
+.publish/
+*.PublishProfiles/
+
+# Archivos de base de datos locales
+*.mdf
+*.ldf
+
+# Configuraciones de secret manager
+secrets.json
+
+# Archivos de perfil de usuario
+*.rsuser
+
+# Archivos de caché de análisis
+*.server.dll
+*.server.pdb
+*.server.tmp
+*.server.log
+
+# Archivos de solución y proyecto
+*.sln.ide
+
+# Archivo global de configuración de .NET CLI
+global.json
+
+# Archivos de configuración de AppSettings (ambiente específico)
+appsettings.Development.json
+appsettings.Staging.json
+appsettings.Production.json
+
+# Archivos temporales
+*.tmp
+*.temp

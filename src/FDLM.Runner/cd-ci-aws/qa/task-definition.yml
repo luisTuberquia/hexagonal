@@ -1,0 +1,45 @@
+family: qa-ms-my-microservice
+requiresCompatibilities: [ FARGATE ]
+networkMode: awsvpc
+cpu: "256"
+memory: "512"
+executionRoleArn: qa-role-deploy-my-microservice
+taskRoleArn: qa-role-ecs-ms-my-microservice
+containerDefinitions:
+  - name: qa-ms-my-microservice
+    image: 171957254901.dkr.ecr.us-east-1.amazonaws.com/qa-ecr-my-microservice:ms-my-microservice-latest
+    cpu: 256
+    memory: 512
+    essential: true
+    portMappings:
+      - containerPort: 8080
+        hostPort: 8080
+        protocol: tcp
+        appProtocol: http
+        name: qa-http-ms-my-microservice
+    environment:      
+      - name: ASPNETCORE_ENVIRONMENT
+        value: "qa"
+      - name: AWS_REGION
+        value: "us-east-2"
+      - name: AWS_SECRETS_NAME
+        value: "qa-secret-ms-my-microservice"
+      - name: AWS_S3_BUCKET_NAME
+        value: "qa-s3-bucket-sqs-my-microservice"
+      - name: AWS_SQS_QUEUE_URL
+        value: "https://sqs.us-east-1.amazonaws.com/171957254901/qa-my-microservice-audit-queue"      
+      - name: TZ
+        value: "UTC"
+      - name: LANG
+        value: "es_MX.UTF-8"
+    secrets:      
+      - name: AWS_CREDENTIALS_ACCESS_KEY
+        valueFrom: arn:aws:secretsmanager:us-east-1:171957254901:secret:qa-secret-ms-my-microservice-users-BaF5Nt
+      - name: AWS_CREDENTIALS_SECRET_KEY
+        valueFrom: arn:aws:secretsmanager:us-east-1:171957254901:secret:qa-secret-ms-my-microservice-users-BaF5Nt
+    logConfiguration:
+      logDriver: awslogs
+      options:
+        awslogs-group: /ecs/qa-ms-my-microservice
+        awslogs-region: us-east-2
+        awslogs-stream-prefix: ecs

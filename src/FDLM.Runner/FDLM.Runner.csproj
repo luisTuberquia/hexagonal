@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+	  <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+	  <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="8.0.7" />
+	  <PackageReference Include="Serilog.AspNetCore" Version="8.0.1" />
+	  <PackageReference Include="Serilog.Formatting.Compact" Version="3.0.0" />
+	  <PackageReference Include="Serilog.Settings.Configuration" Version="8.0.2" />
+	  <PackageReference Include="Serilog.Extensions.Hosting" Version="8.0.0" />
+	  <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+	  <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="8.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FDLM.Application\FDLM.Application.csproj" />
+    <ProjectReference Include="..\FDLM.Domain\FDLM.Domain.csproj" />
+    <ProjectReference Include="..\FDLM.Infrastructure.EntrypointsAdapters\FDLM.Infrastructure.EntrypointsAdapters.csproj" />
+    <ProjectReference Include="..\FDLM.Infrastructure.OutpointsAdapters\FDLM.Infrastructure.OutpointsAdapters.csproj" />
+    <ProjectReference Include="..\FDLM.Utilities\FDLM.Utilities.csproj" />
+  </ItemGroup>
+  
+  <PropertyGroup>
+	<GenerateDocumentationFile>true</GenerateDocumentationFile>
+	<NoWarn>$(NoWarn);1591</NoWarn>
+	<UserSecretsId>67abd0b1-a84b-4b87-9540-f4f5fbf9648a</UserSecretsId>
+  </PropertyGroup>
+</Project>
