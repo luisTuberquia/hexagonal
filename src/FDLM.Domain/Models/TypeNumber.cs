@@ -10,6 +10,7 @@ namespace FDLM.Domain.Models
     {
         Integer,
         Complex,
+        Decimal,
         Unknow
     }
 }

@@ -13,6 +13,9 @@ using FDLM.Infrastructure.EntrypointsAdapters.Rest.Utilities.Examples;
 using AutoMapper;
 using FDLM.Utilities;
 using Swashbuckle.AspNetCore.Annotations;
+using FDLM.Infrastructure.EntrypointsAdapters.SQS;
+using FDLM.Application.Ports;
+using Newtonsoft.Json;
 
 namespace FDLM.Infrastructure.EntrypointsAdapters.Rest.Controllers
 {
@@ -28,13 +31,18 @@ namespace FDLM.Infrastructure.EntrypointsAdapters.Rest.Controllers
         private readonly IInfraEntrypointsResourceService _resource;
         private readonly ILogger<CalculatorController> _logger;
 
+        private readonly SqsListener _sqsEntryPoint;
+        private readonly IPublisherAdapterPort _publisherAdapterPort;
+
         public CalculatorController(
             ICalculatorUseCase useCase,
             ITools tools,
             IRestTools restTools,
             IMapper mapper,
             IInfraEntrypointsResourceService resource, 
-            ILogger<CalculatorController> logger)
+            ILogger<CalculatorController> logger, 
+            SqsListener sqsEntryPoint,
+            IPublisherAdapterPort publisherAdapterPort)
         {
             _useCase = useCase;
             _tools = tools;
@@ -42,6 +50,8 @@ namespace FDLM.Infrastructure.EntrypointsAdapters.Rest.Controllers
             _mapper = mapper;
             _resource = resource;
             _logger = logger;
+            _sqsEntryPoint = sqsEntryPoint;
+            _publisherAdapterPort = publisherAdapterPort;
         }
 
         [HttpPost("sum")]
@@ -73,6 +83,11 @@ namespace FDLM.Infrastructure.EntrypointsAdapters.Rest.Controllers
                             addends = operationRequest.Addends.Select(a => (Number)new ComplexNumber(int.Parse(a.Split("i")[0]), int.Parse(a.Split("i")[1]))).ToList();
                             break;
                         }
+                    case TypeNumber.Decimal:
+                        {
+                            addends = operationRequest.Addends.Select(a => (Number)new DecimalNumber(decimal.Parse(a))).ToList();
+                            break;
+                        }
                     default: break;
                 }
 
@@ -96,6 +111,29 @@ namespace FDLM.Infrastructure.EntrypointsAdapters.Rest.Controllers
 
             int statusCode = _restTools.GetHttpStatusCode(response.Errors);
             return StatusCode(statusCode, response);
+        }
+
+        [HttpGet("sumsqs")]
+        public async Task<IActionResult> SumSqs()
+        {
+            var response = _sqsEntryPoint.ListenForSumRequestsAsync("https://sqs.us-east-2.amazonaws.com/975050112322/SumRequestQueue",1,20);
+          
+
+            return StatusCode(200, response) ;
+
+        }
+
+        [HttpGet("sumsend")]
+        public async Task<IActionResult> SumSend()
+        {
+            var addends = new List<string> { "17", "8", "6" };
+            string detail = JsonConvert.SerializeObject(new { Addends = addends });
+
+            var response = _publisherAdapterPort.SendEventAsync("default", "SumRequest", "custom.sum.service", detail);
+
+
+            return StatusCode(200, detail);
+
         }
 
         [HttpGet("operation")]

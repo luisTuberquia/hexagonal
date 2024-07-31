@@ -1,21 +1,16 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using FDLM.Application.Ports;
+using FDLM.Application.Resources;
 using FDLM.Domain.Constants;
 using FDLM.Domain.Models;
 using FDLM.Domain.Models.Result;
 using FDLM.Domain.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using FDLM.Utilities;
-using FDLM.Application.Resources;
-using FDLM.Application.Ports;
+using Microsoft.Extensions.Logging;
 
 namespace FDLM.Application.UseCases.Calculator
 {
     internal class CalculatorUseCase : ICalculatorUseCase
-    {        
+    {
         private readonly IDataValidator _dataValidator;
         private readonly ICalculatorOperationRepositoryPort _operationsRepositoryPort;
         private readonly ITools _tools;
@@ -49,7 +44,7 @@ namespace FDLM.Application.UseCases.Calculator
             var results = new Results<Number>();
 
             try
-            {                
+            {
                 TypeNumber typeNumber = GetTypeNumber(addends);
                 IOperation calculator = null;
                 if (_calculators.TryGetValue(typeNumber, out calculator))
@@ -202,13 +197,14 @@ namespace FDLM.Application.UseCases.Calculator
         {
             return $"{calculatorOperation.Operation}-{_tools.ToUnixEpoch(calculatorOperation.CreationDateUtc)}";
         }
-        
+
         private TypeNumber GetTypeNumber(IList<Number> numbers)
         {
             TypeNumber typeNumber = TypeNumber.Unknow;
 
             int integerCount = 0;
             int complexCount = 0;
+            int decimalCount = 0;
             foreach (var number in numbers)
             {
                 if (number is ComplexNumber)
@@ -219,13 +215,17 @@ namespace FDLM.Application.UseCases.Calculator
                 {
                     integerCount++;
                 }
+                else if (number is DecimalNumber)
+                {
+                    decimalCount++;
+                }
                 else
                 {
                     return TypeNumber.Unknow;
                 }
             }
 
-            if (integerCount > 0 && complexCount > 0)
+            if (integerCount > 0 && complexCount > 0 || decimalCount > 0 && complexCount > 0)
             {
                 return TypeNumber.Unknow;
             }
@@ -237,6 +237,11 @@ namespace FDLM.Application.UseCases.Calculator
             if (complexCount > 0)
             {
                 return TypeNumber.Complex;
+            }
+
+            if (decimalCount > 0)
+            {
+                return TypeNumber.Decimal;
             }
 
             return typeNumber;

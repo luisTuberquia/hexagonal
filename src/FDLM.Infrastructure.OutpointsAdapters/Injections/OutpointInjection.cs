@@ -19,6 +19,8 @@ using FDLM.Infrastructure.OutpointsAdapters.Database.NoSql.LiteDB.Repositories;
 using FDLM.Infrastructure.OutpointsAdapters.Database.NoSql.DynamoDB.Repositories;
 using FDLM.Infrastructure.OutpointsAdapters.Database.NoSql.DynamoDB.Config;
 using FDLM.Infrastructure.OutpointsAdapters.Database.NoSql.LiteDB.Config;
+using Amazon.EventBridge;
+using FDLM.Infrastructure.OutpointsAdapters.EventPublisher;
 
 namespace FDLM.Infrastructure.OutpointsAdapters.Injections
 {
@@ -29,7 +31,11 @@ namespace FDLM.Infrastructure.OutpointsAdapters.Injections
             services.AddSingleton<IInfraOutpointsResourceService, InfraOutpointsResourceService>();
             services.AddSingleton<LiteDbContext>();
             services.AddSingleton<DynamoDbClient>();
-                        
+
+            services.AddSingleton<IAmazonEventBridge, AmazonEventBridgeClient>();
+
+            services.AddSingleton<IPublisherAdapterPort, PublisherAdapter>();
+
             if (currentEnvironment == "local")
             {
                 string active = (string)configuration.GetValue(typeof(string), "Database:Active");
