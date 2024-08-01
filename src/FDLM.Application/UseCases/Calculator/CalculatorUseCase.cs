@@ -125,9 +125,15 @@ namespace FDLM.Application.UseCases.Calculator
                         results.AddErrors(saveResult.Errors);
                     }
 
+                    var sendResult = await _publisherAdapterPort.SendSumResultAsync(calculatorOperation);
+                    if (sendResult.HasErrors)
+                    {
+                        results.AddErrors(sendResult.Errors);
+                    }
                     results.Result = calculatorOperation;
                     results.TotalItemsReturned = saveResult.TotalItemsReturned;
                     results.TotalItemsInDataBase = saveResult.TotalItemsInDataBase;
+
                 }
                 else
                 {
