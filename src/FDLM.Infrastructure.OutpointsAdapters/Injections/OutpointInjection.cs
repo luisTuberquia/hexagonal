@@ -1,26 +1,17 @@
-﻿using FDLM.Utilities;
+﻿using Amazon.EventBridge;
+using FDLM.Application.Ports;
+using FDLM.Infrastructure.OutpointsAdapters.Database.NoSql.DynamoDB;
+using FDLM.Infrastructure.OutpointsAdapters.Database.NoSql.DynamoDB.Config;
+using FDLM.Infrastructure.OutpointsAdapters.Database.NoSql.DynamoDB.Repositories;
+using FDLM.Infrastructure.OutpointsAdapters.Database.NoSql.LiteDB;
+using FDLM.Infrastructure.OutpointsAdapters.Database.NoSql.LiteDB.Config;
+using FDLM.Infrastructure.OutpointsAdapters.Database.NoSql.LiteDB.Repositories;
+using FDLM.Infrastructure.OutpointsAdapters.EventPublisher;
+using FDLM.Infrastructure.OutpointsAdapters.EventPublisher.Config;
+using FDLM.Infrastructure.OutpointsAdapters.Resources;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Polly;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Serialization;
-using System.Text.Json;
-using System.Threading.Tasks;
 using System.Reflection;
-using FDLM.Infrastructure.OutpointsAdapters.Resources;
-using FDLM.Infrastructure.OutpointsAdapters.Database.NoSql.LiteDB;
-using FDLM.Infrastructure.OutpointsAdapters.Database.NoSql.DynamoDB;
-using FDLM.Application.Ports;
-using FDLM.Infrastructure.OutpointsAdapters.Database.NoSql.LiteDB.Repositories;
-using FDLM.Infrastructure.OutpointsAdapters.Database.NoSql.DynamoDB.Repositories;
-using FDLM.Infrastructure.OutpointsAdapters.Database.NoSql.DynamoDB.Config;
-using FDLM.Infrastructure.OutpointsAdapters.Database.NoSql.LiteDB.Config;
-using Amazon.EventBridge;
-using FDLM.Infrastructure.OutpointsAdapters.EventPublisher;
 
 namespace FDLM.Infrastructure.OutpointsAdapters.Injections
 {
@@ -56,6 +47,7 @@ namespace FDLM.Infrastructure.OutpointsAdapters.Injections
             var assembly = Assembly.Load("FDLM.Infrastructure.OutpointsAdapters");
             services.AddAutoMapper(assembly);
 
+            services.Configure<EventBridgeOptions>(configuration.GetSection("EventBridge"));
             services.Configure<DynamoDbConfig>(configuration.GetSection("Database:DynamoDB"));
             services.Configure<LiteDbConfig>(configuration.GetSection("Database:LiteDB"));
 

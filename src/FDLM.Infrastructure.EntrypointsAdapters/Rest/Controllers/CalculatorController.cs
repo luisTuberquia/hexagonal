@@ -126,10 +126,11 @@ namespace FDLM.Infrastructure.EntrypointsAdapters.Rest.Controllers
         [HttpGet("sumsend")]
         public async Task<IActionResult> SumSend()
         {
-            var addends = new List<string> { "17", "8", "6" };
+            var addends = new List<string> { "17", "28", "36" };
             string detail = JsonConvert.SerializeObject(new { Addends = addends });
 
-            var response = _publisherAdapterPort.SendEventAsync("default", "SumRequest", "custom.sum.service", detail);
+            //var response = _publisherAdapterPort.SendEventAsync("default", "SumRequest", "custom.sum.service", detail);
+            var response = _publisherAdapterPort.SendSumRequestAsync(addends);
 
 
             return StatusCode(200, detail);

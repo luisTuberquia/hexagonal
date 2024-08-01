@@ -17,13 +17,16 @@ namespace FDLM.Application.UseCases.Calculator
         private readonly Dictionary<TypeNumber, IOperation> _calculators;
         private readonly IApplicationResourceService _resources;
         private readonly ILogger<CalculatorUseCase> _logger;
+        private readonly IPublisherAdapterPort _publisherAdapterPort;
 
-        public CalculatorUseCase(Func<string, IOperation> serviceAccessor,
+       public CalculatorUseCase(Func<string, IOperation> serviceAccessor,
                                 IDataValidator dataValidator,
                                 ICalculatorOperationRepositoryPort operationsRepositoryPort,
                                 ITools tools,
                                 IApplicationResourceService resources,
-                                ILogger<CalculatorUseCase> logger)
+                                ILogger<CalculatorUseCase> logger,
+                                IPublisherAdapterPort publisherAdapterPort
+                                )
         {
             _calculators = new Dictionary<TypeNumber, IOperation>
             {
@@ -36,6 +39,7 @@ namespace FDLM.Application.UseCases.Calculator
             _tools = tools;
             _resources = resources;
             _logger = logger;
+            _publisherAdapterPort = publisherAdapterPort;
         }
 
         #region Public Methods
